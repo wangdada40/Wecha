@@ -111,7 +111,7 @@ namespace WeChat_Token.Controllers
             //拉取用户信息
             //如果网页授权作用域为snsapi_userinfo，则此时开发者可以通过access_token和openid拉取用户信息了。
          //   string Userurl = "https://api.weixin.qq.com/sns/userinfo?access_token="+parameter.access_token+"&openid="+parameter.openid+"&lang=zh_CN";
-          // var User = getUserHttp.GetUsreJson(Userurl);
+          // var User = getUserHttp.GetUsreJson(Userurl);1
             return parameter;
         }
     }
