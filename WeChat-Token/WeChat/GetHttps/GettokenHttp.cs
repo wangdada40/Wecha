@@ -9,7 +9,7 @@ namespace WeChat_Token.WeChat.GetHttps
         //是第一步，利用http协议，解析https://api.weixin.qq.com/sns/oauth2/access_token?appid=APPID&secret=SECRET&code=CODE&grant_type=authorization_code
 
         //得到必要的获取微信参数的信息
-        public GetToken GetJson(string url)
+        public string GetJson(string url)
         {
             //1、创建一个Uri：Uri类
             Uri uri = new Uri(url);
@@ -37,16 +37,15 @@ namespace WeChat_Token.WeChat.GetHttps
 
                 //6.5 转换数据格式
                 //把结果字符串反序列化成List对象。
-
-                var list = JsonConvert.DeserializeObject<GetToken>(result);
+                //    var list = JsonConvert.DeserializeObject<GetToken>(result);
                 //7、释放资源 
                 httpClient.Dispose();
-                return list;
+                
+                return result;
 
             }
             else
             {
-
                 //7、释放资源 
                 httpClient.Dispose();
                 return null;

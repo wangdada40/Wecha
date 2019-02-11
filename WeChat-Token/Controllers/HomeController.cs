@@ -1,6 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using System;
+using System.Net.Http;
+using System.Threading.Tasks;
 using WeChat_Token.Models;
 using WeChat_Token.WeChat;
 using WeChat_Token.WeChat.GetHttps;
@@ -86,7 +89,7 @@ namespace WeChat_Token.Controllers
 
         //可以给WeChatRequestModel 加东西，比如我加了Code。
         //登录的时候我就可以从微信拿到Code
-        public GetToken Valid(WeChatRequestModel model)
+        public async Task<string> Valid(WeChatRequestModel model)
         {
             //获取请求来的 echostr 参数
             string echoStr = model.echostr;
@@ -96,23 +99,28 @@ namespace WeChat_Token.Controllers
                 if (!string.IsNullOrEmpty(echoStr))
                 {
                     //将随机生成的 echostr 参数 原样输出
-                    Response.WriteAsync(echoStr);
+                  await  Response.WriteAsync(echoStr);
                     //截止输出流
                     //Response.end();
                 }
             }
             //解析连接的类
             GetTokenHttp getHttp = new GetTokenHttp();
-          //  GetUserHttp getUserHttp = new GetUserHttp();
             WxPayConfig wxPayConfig = new WxPayConfig();
             //通过code换取网页授权access_token
             string url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + wxPayConfig.appid + "&secret=" + wxPayConfig.appSecret + "&code=" + model.code + "&grant_type=authorization_code";
-            var parameter = getHttp.GetJson(url);
+            var getParameter = getHttp.GetJson(url);
+            //把结果字符串反序列化成List对象。
+             var parameter = JsonConvert.DeserializeObject<GetToken>(getParameter);
             //拉取用户信息
             //如果网页授权作用域为snsapi_userinfo，则此时开发者可以通过access_token和openid拉取用户信息了。
-         //   string Userurl = "https://api.weixin.qq.com/sns/userinfo?access_token="+parameter.access_token+"&openid="+parameter.openid+"&lang=zh_CN";
-          // var User = getUserHttp.GetUsreJson(Userurl);1
-            return parameter;
+           string Userurl = "https://api.weixin.qq.com/sns/userinfo?access_token="+parameter.access_token+"&openid="+parameter.openid+"&lang=zh_CN";
+         // var getUser = getHttp.GetJson(Userurl);
+            HttpClient httpClient = new HttpClient();
+           var getUser= await httpClient.GetStringAsync(Userurl);
+              //把结果字符串反序列化成List对象。
+            //   var User= JsonConvert.DeserializeObject<GetUser>(getUser);
+            return getUser;
         }
     }
 }
