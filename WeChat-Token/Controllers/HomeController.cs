@@ -81,7 +81,7 @@ namespace WeChat_Token.Controllers
 
         //可以给WeChatRequestModel 加东西，比如我加了Code。
         //登录的时候我就可以从微信拿到Code
-        public async Task<string> Valid(WeChatRequestModel model)
+        public async Task<GetUser> Valid(WeChatRequestModel model)
         {
             //获取请求来的 echostr 参数
             string echoStr = model.echostr;
@@ -111,8 +111,8 @@ namespace WeChat_Token.Controllers
           
            var getUser= await httpClient.GetStringAsync(Userurl);
               //把结果字符串反序列化成List对象。
-            // var User= JsonConvert.DeserializeObject<GetUser>(getUser);
-            return getUser;
+            var User= JsonConvert.DeserializeObject<GetUser>(getUser);
+            return User;
         }
     }
 }
