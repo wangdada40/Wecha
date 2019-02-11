@@ -17,14 +17,6 @@ namespace WeChat_Token.Controllers
             return View();
         }
 
-        public string Index2()
-        {
-            GetTokenHttp getHttp = new GetTokenHttp();
-            string url = "http://t.weather.sojson.com/api/weather/city/101030100";
-            var ce = getHttp.GetJson(url);
-            return ce + "!!!!!!!";
-        }
-
         /// <summary>
         /// 定义Token，与微信公共平台上的Token保持一致
         /// </summary>
@@ -105,21 +97,21 @@ namespace WeChat_Token.Controllers
                 }
             }
             //解析连接的类
-            GetTokenHttp getHttp = new GetTokenHttp();
             WxPayConfig wxPayConfig = new WxPayConfig();
             //通过code换取网页授权access_token
             string url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=" + wxPayConfig.appid + "&secret=" + wxPayConfig.appSecret + "&code=" + model.code + "&grant_type=authorization_code";
-            var getParameter = getHttp.GetJson(url);
+              HttpClient httpClient = new HttpClient();
+            var getParameter = await httpClient.GetStringAsync(url); //getHttp.GetJson(url);
             //把结果字符串反序列化成List对象。
              var parameter = JsonConvert.DeserializeObject<GetToken>(getParameter);
             //拉取用户信息
             //如果网页授权作用域为snsapi_userinfo，则此时开发者可以通过access_token和openid拉取用户信息了。
            string Userurl = "https://api.weixin.qq.com/sns/userinfo?access_token="+parameter.access_token+"&openid="+parameter.openid+"&lang=zh_CN";
-         // var getUser = getHttp.GetJson(Userurl);
-            HttpClient httpClient = new HttpClient();
+         //获得连接字符串的数据
+          
            var getUser= await httpClient.GetStringAsync(Userurl);
               //把结果字符串反序列化成List对象。
-            //   var User= JsonConvert.DeserializeObject<GetUser>(getUser);
+            // var User= JsonConvert.DeserializeObject<GetUser>(getUser);
             return getUser;
         }
     }
