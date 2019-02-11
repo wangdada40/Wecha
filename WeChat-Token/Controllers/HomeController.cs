@@ -110,7 +110,7 @@ namespace WeChat_Token.Controllers
          //获得连接字符串的数据
           
            var getUser= await httpClient.GetStringAsync(Userurl);
-              //把结果字符串反序列化成List对象。
+              //把结果字符串反序列化成List对象。1
             var User= JsonConvert.DeserializeObject<GetUser>(getUser);
             return User;
         }
